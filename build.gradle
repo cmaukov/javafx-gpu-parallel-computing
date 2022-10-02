@@ -25,7 +25,7 @@ tasks.withType(JavaCompile) {
 
 application {
     mainModule = 'com.bmstechpro.javafxgpuparallelcomputing'
-    mainClass = 'com.bmstechpro.javafxgpuparallelcomputing.HelloApplication'
+    mainClass = 'com.bmstechpro.javafxgpuparallelcomputing.GPGPUApp'
 }
 
 javafx {
