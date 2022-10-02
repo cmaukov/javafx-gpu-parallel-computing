@@ -37,6 +37,8 @@ dependencies {
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+    implementation group: 'com.aparapi', name: 'aparapi', version: '3.0.0'
+
 }
 
 test {

@@ -1,5 +1,6 @@
 package com.bmstechpro.javafxgpuparallelcomputing;
 
+import com.aparapi.Kernel;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Parent;
@@ -11,7 +12,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Random;
-import java.util.stream.IntStream;
 
 public class GPGPUApp extends Application {
     private static final int W = 1600;
@@ -20,6 +20,8 @@ public class GPGPUApp extends Application {
     private static final int[] array1 = new int[ARRAY_LENGTH];
     private static final int[] array2 = new int[ARRAY_LENGTH];
     private static final int[] result = new int[ARRAY_LENGTH];
+
+    Kernel kernel ;
 
     private Canvas canvas;
 
@@ -44,6 +46,8 @@ public class GPGPUApp extends Application {
             array1[i] = randomValue;
             array2[i] = colorRed - randomValue;
         }
+
+         kernel = new GPUKernel(array1, array2, result);
         Pane root = new Pane();
         root.setPrefSize(W, H);
         canvas = new Canvas(W, H);
@@ -61,13 +65,16 @@ public class GPGPUApp extends Application {
 
     private void onUpdate() {
         long start = System.nanoTime();
-        IntStream.range(0, ARRAY_LENGTH)
-                .parallel()
-                .forEach(index -> {
-                    result[index] = array1[index] + array2[index];
-                });
+//        IntStream.range(0, ARRAY_LENGTH)
+//                .parallel()
+//                .forEach(index -> {
+//                    result[index] = array1[index] + array2[index];
+//                });
+
+        kernel.execute(ARRAY_LENGTH);
+        kernel.get(result);
         long end = System.nanoTime() - start;
-        System.out.println("Time: " + end / 1_000_000.0 +" ms");
+        System.out.println("Time: " + end / 1_000_000.0 + " ms");
         canvas.getGraphicsContext2D()
                 .getPixelWriter()
                 .setPixels(0, 0, W, H, PixelFormat.getIntArgbPreInstance(), result, 0, W);
